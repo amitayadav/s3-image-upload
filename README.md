@@ -1,22 +1,24 @@
-# s3-file-upload
+# Load credentials directly
+let access_key = String::from("AKIAIOSFODNN7EXAMPLE");
+let secret_key = String::from("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY");
+let credentials = Credentials::new(Some(access_key), Some(secret_key), None, None);
 
-A command line utility that uploads files to an AWS S3 bucket.
+# Load credentials from the environment
+use std::env;
+env::set_var("AWS_ACCESS_KEY_ID", "AKIAIOSFODNN7EXAMPLE");
+env::set_var("AWS_SECRET_ACCESS_KEY", "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY");
+let credentials = Credentials::new(None, None, None, None);
 
-```
-$ s3-file-upload LOCAL_PATH BUCKET_NAME [OPTIONS]
-```
+# Loads from the standard AWS credentials file with the given profile name,
+defaults to "default".
 
-Valid options:
-```
---ignored_directories    List of directory names using a comma separator, e.g. --ignored_directories=ignored_dir_one,ignored_dir_two
-```
+use s3::credentials::Credentials;
 
-AWS user details are found in a `credentials` file that should be present in the same directory the app is run from. This file should contain the `aws_access_key_id` and `aws_secret_access_key` for the user:
-```
-[user]
-aws_access_key_id = ACCESS_KEY_ID
-aws_secret_access_key = SECRET_ACCESS_KEY
-```
-____________________________________
+* Load credentials from `[default]` profile
+let credentials = Credentials::default();
 
-This is a small utility I needed, and also something to use to try out [Rust](https://www.rust-lang.org/).
+* Also loads credentials from `[default]` profile
+let credentials = Credentials::new(None, None, None, None);
+
+*Load credentials from `[my-profile]` profile
+let credentials = Credentials::new(None, None, None, Some("my-profile".into()));
